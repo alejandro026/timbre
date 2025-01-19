@@ -1,7 +1,7 @@
 const int LED = 13;              // Pin del LED (timbre)
 const int BOTON = 7;             // Pin del botón
 const unsigned long TIEMPO_ESPERA = 10000;  // Tiempo de espera entre pulsaciones (10 segundos)
-const unsigned long TIEMPO_ESPERA_30SEG = 30000;  // Tiempo de espera después de 3 pulsaciones (30 segundos)
+const unsigned long TIEMPO_ESPERA_30SEG = 25000;  // Tiempo de espera después de 3 pulsaciones (30 segundos)
 const int MAX_PULSACIONES = 3;   // Número máximo de pulsaciones antes de esperar 30 segundos
 
 unsigned long tiempoUltimaPulsacion = 0;  // Almacena el último tiempo de pulsación
@@ -17,6 +17,8 @@ void setup() {
 
 void loop() {
   int estadoBoton = digitalRead(BOTON);
+  digitalWrite(LED, HIGH);
+
 
   // Solo consideramos la pulsación si ha pasado un tiempo suficiente desde la última
   if (estadoBoton == HIGH && (millis() - tiempoUltimaPulsacion) > 50) {
@@ -27,9 +29,9 @@ void loop() {
     
     // Si el contador de pulsaciones es menor a 3, encendemos el LED
     if (contadorPulsaciones < MAX_PULSACIONES) {
-      digitalWrite(LED, HIGH);
-      delay(100);  // Mantén el LED encendido por 100ms
       digitalWrite(LED, LOW);
+      delay(100);  // Mantén el LED encendido por 100ms
+      digitalWrite(LED, HIGH);
       contadorPulsaciones++; // Incrementamos el contador
     }
 
