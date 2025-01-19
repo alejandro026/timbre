@@ -6,6 +6,8 @@ const int MAX_PULSACIONES = 3;   // Número máximo de pulsaciones antes de espe
 
 unsigned long tiempoUltimaPulsacion = 0;  // Almacena el último tiempo de pulsación
 unsigned long tiempoUltimaEspera = 0;     // Almacena el tiempo de la última espera de 30 segundos
+unsigned long tiempoUltimaInactividad = 0; // Almacena el tiempo de inactividad (sin pulsación de botón)
+
 int contadorPulsaciones = 0;  // Cuenta las pulsaciones del botón
 
 void setup() {
@@ -20,6 +22,9 @@ void loop() {
   if (estadoBoton == HIGH && (millis() - tiempoUltimaPulsacion) > 50) {
     tiempoUltimaPulsacion = millis(); // Actualizamos el tiempo de la última pulsación
 
+    // Reiniciar el contador de inactividad si se presiona el botón
+    tiempoUltimaInactividad = millis();
+    
     // Si el contador de pulsaciones es menor a 3, encendemos el LED
     if (contadorPulsaciones < MAX_PULSACIONES) {
       digitalWrite(LED, HIGH);
@@ -39,5 +44,12 @@ void loop() {
 
     // Después de cada pulsación, espera el tiempo mínimo antes de permitir otra
     delay(TIEMPO_ESPERA);  // Puedes ajustar este tiempo si lo deseas
+  
   }
+  
+  // Verificar si han pasado 30 segundos sin pulsaciones
+  if (millis() - tiempoUltimaInactividad > TIEMPO_ESPERA_30SEG) {
+    contadorPulsaciones = 0; // Reiniciar el contador de pulsaciones después de 30 segundos de inactividad
+  }
+  
 }
